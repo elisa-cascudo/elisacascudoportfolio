@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Segmentation Analysis - Project Case Study</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --forest-green: #2D5016;
+            --leaf-green: #4A7C2C;
+            --spring-green: #7FB069;
+            --sage-green: #9DC183;
+            --mint-cream: #E8F5E9;
+            --earth-brown: #8B7355;
+            --sky-blue: #B8D4E8;
+            --sunshine: #FFD54F;
+            --cream: #FFF9E6;
+            --shadow-soft: rgba(45, 80, 22, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--cream);
+            color: var(--forest-green);
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="%234A7C2C"/><circle cx="12" cy="12" r="3" fill="%23FFF9E6"/></svg>') 12 12, auto;
+            line-height: 1.8;
+        }
+
+        /* Paper texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.4;
+            z-index: 9999;
+            pointer-events: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="paper"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise"/><feDiffuseLighting in="noise" lighting-color="%23F5E6D3" surfaceScale="1"><feDistantLight azimuth="45" elevation="60"/></feDiffuseLighting></filter><rect width="300" height="300" filter="url(%23paper)"/></svg>');
+        }
+
+        .geo-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: hidden; }
+        .geo-shape { position: absolute; opacity: 0.08; }
+        @keyframes float-slow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
+
+        a, button {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="10" fill="%237FB069"/><circle cx="14" cy="14" r="4" fill="%23FFF9E6"/><circle cx="14" cy="14" r="2" fill="%234A7C2C"/></svg>') 14 14, pointer;
+        }
+
+        .back-nav {
+            background: linear-gradient(180deg, var(--mint-cream), white);
+            padding: 1rem 5%;
+            border-bottom: 4px solid var(--sage-green);
+            box-shadow: 0 4px 15px var(--shadow-soft);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .back-button {
+            padding: 0.7rem 1.3rem;
+            background: linear-gradient(180deg, var(--spring-green), var(--leaf-green));
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            border: 3px solid var(--forest-green);
+            box-shadow: 0 3px 0 var(--forest-green), 0 5px 12px var(--shadow-soft);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-button:hover {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 var(--forest-green), 0 3px 8px var(--shadow-soft);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 5% 4rem;
+        }
+
+        .project-hero {
+            background: linear-gradient(135deg, var(--spring-green), var(--sage-green));
+            padding: 3rem;
+            border-radius: 6px;
+            margin-bottom: 3rem;
+            border: 5px solid var(--forest-green);
+            box-shadow: 0 10px 0 var(--forest-green), 0 15px 40px var(--shadow-soft);
+            color: white;
+        }
+
+        .project-number {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            background: var(--sunshine);
+            color: var(--forest-green);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            border-radius: 3px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            border: 3px solid var(--forest-green);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .tag {
+            padding: 0.5rem 1.2rem;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 2px solid white;
+        }
+
+        .section {
+            background: linear-gradient(135deg, #FFFFFF 0%, #FEFDFB 100%);
+            padding: 2.5rem;
+            border-radius: 6px;
+            border: 4px solid var(--sage-green);
+            box-shadow: 0 6px 0 var(--sage-green), 0 10px 25px var(--shadow-soft);
+            margin-bottom: 2.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--forest-green);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--leaf-green);
+            margin: 1.5rem 0 1rem;
+        }
+
+        .section p {
+            color: var(--leaf-green);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .section ul, .section ol {
+            color: var(--leaf-green);
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--mint-cream), white);
+            padding: 1.5rem;
+            border-radius: 4px;
+            border-left: 6px solid var(--spring-green);
+            margin: 1.5rem 0;
+            border-top: 2px solid var(--sage-green);
+            border-right: 2px solid var(--sage-green);
+            border-bottom: 2px solid var(--sage-green);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--spring-green), var(--sage-green));
+            padding: 2rem;
+            border-radius: 4px;
+            text-align: center;
+            color: white;
+            border: 3px solid var(--forest-green);
+            box-shadow: 0 5px 0 var(--forest-green), 0 8px 20px var(--shadow-soft);
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .code-block {
+            background: #2D2D2D;
+            color: #F8F8F2;
+            padding: 1.5rem;
+            border-radius: 3px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 3px solid var(--forest-green);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, var(--mint-cream), var(--sage-green));
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            margin: 2rem 0;
+            border: 4px solid var(--sage-green);
+        }
+
+        .next-prev-nav {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .nav-button {
+            flex: 1;
+            padding: 1.2rem;
+            background: linear-gradient(180deg, white, var(--mint-cream));
+            border: 3px solid var(--sage-green);
+            border-radius: 4px;
+            text-decoration: none;
+            color: var(--forest-green);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 0 var(--sage-green), 0 6px 15px var(--shadow-soft);
+        }
+
+        .nav-button:hover {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 var(--sage-green), 0 4px 10px var(--shadow-soft);
+        }
+
+        footer {
+            background: linear-gradient(180deg, var(--forest-green), var(--leaf-green));
+            color: white;
+            padding: 2rem 5%;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .next-prev-nav {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Geometric Background Elements -->
+    <div class="geo-background" aria-hidden="true">
+        <div class="geo-shape geo-circle-1"></div>
+        <div class="geo-shape geo-line-1"></div>
+    </div>
+
+    <nav class="back-nav">
+        <div class="back-nav-container">
+            <a href="projects.html" class="back-button">← All Projects</a>
+            <a href="index.html" class="back-button">🏠 Home</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="project-hero">
+            <span class="project-number">Project #1</span>
+            <h1>Customer Segmentation Analysis</h1>
+            <p style="font-size: 1.2rem; margin-top: 1rem; opacity: 0.95;">Using machine learning to identify distinct customer groups and drive targeted marketing strategies</p>
+            <div class="project-tags">
+                <span class="tag">Python</span>
+                <span class="tag">K-Means Clustering</span>
+                <span class="tag">Tableau</span>
+                <span class="tag">Pandas</span>
+                <span class="tag">Scikit-learn</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📋 Project Overview</h2>
+            <p>This project was undertaken for a mid-sized e-commerce company struggling with one-size-fits-all marketing campaigns that were yielding diminishing returns. The goal was to segment their customer base into meaningful groups to enable personalized marketing strategies.</p>
+            
+            <div class="highlight-box">
+                <h3>🎯 Objectives</h3>
+                <ul>
+                    <li>Identify distinct customer segments based on purchasing behavior</li>
+                    <li>Develop actionable insights for targeted marketing</li>
+                    <li>Create an automated pipeline for ongoing segmentation</li>
+                    <li>Measure impact on marketing efficiency and ROI</li>
+                </ul>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">50K+</span>
+                    <span class="stat-label">Customers Analyzed</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">25%</span>
+                    <span class="stat-label">Increase in Marketing Efficiency</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">5</span>
+                    <span class="stat-label">Distinct Segments Identified</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">18%</span>
+                    <span class="stat-label">Revenue Growth</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔍 The Challenge</h2>
+            <p>The company had accumulated 3 years of customer transaction data but wasn't leveraging it effectively. Their marketing team was sending the same campaigns to all customers, resulting in:</p>
+            <ul>
+                <li>Low email open rates (averaging 12%)</li>
+                <li>Declining customer engagement</li>
+                <li>Wasted marketing budget on irrelevant campaigns</li>
+                <li>No clear understanding of different customer types</li>
+            </ul>
+            <p>They needed a data-driven approach to understand their customers better and tailor their marketing accordingly.</p>
+        </div>
+
+        <div class="section">
+            <h2>💡 Approach & Methodology</h2>
+            
+            <h3>1. Data Collection & Preparation</h3>
+            <p>I started by gathering and cleaning customer transaction data from their database:</p>
+            <ul>
+                <li>Transaction history (50,000+ customers over 3 years)</li>
+                <li>Purchase frequency and recency</li>
+                <li>Average order value</li>
+                <li>Product categories purchased</li>
+                <li>Customer lifetime value</li>
+            </ul>
+
+            <div class="code-block">
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load and preprocess data
+df = pd.read_csv('customer_transactions.csv')
+
+# Feature engineering
+df['recency'] = (df['last_purchase_date'] - df['first_purchase_date']).dt.days
+df['frequency'] = df['total_orders']
+df['monetary'] = df['total_spent']
+
+# Create RFM features
+features = df[['recency', 'frequency', 'monetary']]
+scaler = StandardScaler()
+features_scaled = scaler.fit_transform(features)
+            </div>
+
+            <h3>2. Exploratory Data Analysis</h3>
+            <p>I performed extensive EDA to understand the distribution of customer behavior and identify potential patterns:</p>
+            
+            <div class="image-placeholder">
+                📊 Distribution Charts & Correlation Matrix
+            </div>
+
+            <h3>3. Model Selection & Training</h3>
+            <p>I used K-Means clustering after testing multiple algorithms. The elbow method and silhouette analysis helped determine the optimal number of clusters (k=5):</p>
+
+            <div class="code-block">
+# Determine optimal k using elbow method
+inertias = []
+silhouette_scores = []
+
+for k in range(2, 11):
+    kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
+    kmeans.fit(features_scaled)
+    inertias.append(kmeans.inertia_)
+    silhouette_scores.append(silhouette_score(features_scaled, kmeans.labels_))
+
+# Train final model with k=5
+final_model = KMeans(n_clusters=5, random_state=42, n_init=10)
+df['cluster'] = final_model.fit_predict(features_scaled)
+            </div>
+
+            <h3>4. Segment Analysis & Profiling</h3>
+            <p>After clustering, I analyzed each segment to create actionable profiles:</p>
+            <ul>
+                <li><strong>VIP Champions (12%):</strong> High value, frequent buyers - target with premium offers</li>
+                <li><strong>Loyal Customers (28%):</strong> Regular purchases, medium value - nurture with loyalty programs</li>
+                <li><strong>Potential Loyalists (24%):</strong> Recent customers with potential - engage with personalized recommendations</li>
+                <li><strong>At Risk (21%):</strong> Previously active, now declining - re-engagement campaigns needed</li>
+                <li><strong>Lost Customers (15%):</strong> Haven't purchased in 6+ months - win-back campaigns</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>📊 Results & Impact</h2>
+            
+            <div class="highlight-box">
+                <h3>Key Achievements:</h3>
+                <ul>
+                    <li><strong>25% increase in marketing efficiency:</strong> By targeting campaigns to specific segments</li>
+                    <li><strong>Email open rates improved from 12% to 31%:</strong> Thanks to personalized messaging</li>
+                    <li><strong>18% revenue growth:</strong> From better customer retention and upselling</li>
+                    <li><strong>40% reduction in churn:</strong> Through proactive re-engagement of at-risk customers</li>
+                    <li><strong>Automated pipeline:</strong> Weekly updates ensure segments stay current</li>
+                </ul>
+            </div>
+
+            <div class="image-placeholder">
+                📈 Before/After Campaign Performance Comparison
+            </div>
+
+            <p>The marketing team now runs segment-specific campaigns:</p>
+            <ul>
+                <li>VIP Champions receive exclusive early access to new products</li>
+                <li>At Risk customers get personalized "We miss you" offers</li>
+                <li>Potential Loyalists receive targeted product recommendations</li>
+                <li>Lost customers get aggressive win-back discounts</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>💭 Key Learnings</h2>
+            <ul>
+                <li><strong>RFM analysis is powerful:</strong> Recency, Frequency, and Monetary value provide excellent segmentation features</li>
+                <li><strong>Business context matters:</strong> Working closely with the marketing team ensured segments were actionable</li>
+                <li><strong>Automation is crucial:</strong> An automated pipeline ensures insights stay relevant</li>
+                <li><strong>Visualization helps adoption:</strong> Clear Tableau dashboards made it easy for stakeholders to understand and use the segments</li>
+                <li><strong>Start simple:</strong> K-Means was sufficient; more complex algorithms didn't improve results significantly</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🚀 Next Steps</h2>
+            <p>The project opened doors for further enhancements:</p>
+            <ul>
+                <li>Incorporate behavioral data (website activity, email engagement)</li>
+                <li>Develop predictive models for customer lifetime value</li>
+                <li>Create segment-specific product recommendation engines</li>
+                <li>Implement real-time segmentation for personalized web experiences</li>
+            </ul>
+        </div>
+
+        <div class="next-prev-nav">
+            <a href="projects.html" class="nav-button">← Back to All Projects</a>
+            <a href="project2.html" class="nav-button">Next Project: Sales Forecasting →</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Data Analytics Portfolio 🌿</p>
+    </footer>
+</body>
+</html>

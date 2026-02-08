@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master's Thesis Journey - Data Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --forest-green: #2D5016;
+            --leaf-green: #4A7C2C;
+            --spring-green: #7FB069;
+            --sage-green: #9DC183;
+            --mint-cream: #E8F5E9;
+            --earth-brown: #8B7355;
+            --sunshine: #FFD54F;
+            --cream: #FFF9E6;
+            --shadow-soft: rgba(45, 80, 22, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #FFF9E6 0%, #F5EDDA 50%, #FFF9E6 100%);
+            background-attachment: fixed;
+            color: var(--forest-green);
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="%234A7C2C"/><circle cx="12" cy="12" r="3" fill="%23FFF9E6"/></svg>') 12 12, auto;
+            line-height: 1.7;
+        }
+
+        /* Paper texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.4;
+            z-index: 9999;
+            pointer-events: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="paper"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise"/><feDiffuseLighting in="noise" lighting-color="%23F5E6D3" surfaceScale="1"><feDistantLight azimuth="45" elevation="60"/></feDiffuseLighting></filter><rect width="300" height="300" filter="url(%23paper)"/></svg>');
+        }
+
+        .geo-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: hidden; }
+        .geo-shape { position: absolute; opacity: 0.08; }
+        @keyframes float-slow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
+
+        a, button {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="10" fill="%237FB069"/><circle cx="14" cy="14" r="4" fill="%23FFF9E6"/><circle cx="14" cy="14" r="2" fill="%234A7C2C"/></svg>') 14 14, pointer;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(180deg, var(--spring-green), var(--leaf-green));
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            border: 3px solid var(--forest-green);
+            box-shadow: 0 4px 0 var(--forest-green), 0 6px 15px var(--shadow-soft);
+            z-index: 100;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-button:hover {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 var(--forest-green), 0 4px 10px var(--shadow-soft);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 5% 4rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: var(--forest-green);
+            text-shadow: 3px 3px 0 var(--sage-green);
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: var(--leaf-green);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .progress-overview {
+            background: linear-gradient(135deg, #FFFFFF 0%, #FEFDFB 100%);
+            padding: 2.5rem;
+            border-radius: 6px;
+            border: 4px solid var(--sage-green);
+            box-shadow: 0 8px 0 var(--sage-green), 0 12px 30px var(--shadow-soft);
+            margin-bottom: 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-bar-container {
+            background: white;
+            height: 40px;
+            border-radius: 6px;
+            border: 3px solid var(--spring-green);
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--spring-green), var(--sage-green));
+            width: 60%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 1rem;
+            color: white;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            font-size: 1.1rem;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            text-align: center;
+            color: var(--leaf-green);
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 4rem;
+            margin-top: 3rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            background: linear-gradient(180deg, var(--spring-green), var(--sage-green));
+            border-radius: 3px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 4rem;
+            background: linear-gradient(135deg, #FFFFFF 0%, #FEFDFB 100%);
+            padding: 2rem;
+            border-radius: 6px;
+            border: 4px solid var(--sage-green);
+            box-shadow: 0 6px 0 var(--sage-green), 0 10px 25px var(--shadow-soft);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1;
+        }
+
+        .timeline-item:hover {
+            transform: translateX(15px) translateY(-5px);
+            box-shadow: 0 10px 0 var(--sage-green), 0 16px 40px var(--shadow-soft);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -4.5rem;
+            top: 2rem;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            background: white;
+            border: 5px solid var(--spring-green);
+            box-shadow: 0 0 0 4px white, 0 0 0 8px var(--spring-green);
+            z-index: 2;
+        }
+
+        .timeline-item.completed::before {
+            background: var(--spring-green);
+            content: '✓';
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            font-size: 1rem;
+        }
+
+        .timeline-item.in-progress::before {
+            background: var(--sunshine);
+            animation: pulse 2s infinite;
+            border-color: var(--sunshine);
+            box-shadow: 0 0 0 4px white, 0 0 0 8px var(--sunshine);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .timeline-item.upcoming::before {
+            background: var(--mint-cream);
+            border-color: var(--sage-green);
+            box-shadow: 0 0 0 4px white, 0 0 0 8px var(--sage-green);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            border-radius: 4px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            border: 3px solid;
+        }
+
+        .status-badge.completed {
+            background: var(--spring-green);
+            color: white;
+            border-color: var(--forest-green);
+        }
+
+        .status-badge.in-progress {
+            background: var(--sunshine);
+            color: var(--forest-green);
+            border-color: var(--earth-brown);
+        }
+
+        .status-badge.upcoming {
+            background: var(--mint-cream);
+            color: var(--leaf-green);
+            border-color: var(--sage-green);
+        }
+
+        .timeline-item h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--forest-green);
+            margin-bottom: 1rem;
+        }
+
+        .timeline-date {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: linear-gradient(135deg, var(--mint-cream), white);
+            border-radius: 3px;
+            font-size: 0.95rem;
+            color: var(--spring-green);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 1rem;
+            border: 2px solid var(--sage-green);
+        }
+
+        .timeline-item p {
+            color: var(--leaf-green);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .timeline-item ul {
+            margin-left: 1.5rem;
+            color: var(--leaf-green);
+        }
+
+        .timeline-item li {
+            margin-bottom: 0.5rem;
+        }
+
+        .update-section {
+            background: linear-gradient(135deg, var(--mint-cream), white);
+            padding: 2.5rem;
+            border-radius: 6px;
+            border: 4px solid var(--sage-green);
+            box-shadow: 0 6px 0 var(--sage-green), 0 10px 25px var(--shadow-soft);
+            margin-top: 4rem;
+        }
+
+        .update-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--forest-green);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .update-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 4px;
+            border: 3px solid var(--spring-green);
+            margin-bottom: 1.5rem;
+        }
+
+        .update-date {
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--spring-green);
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            background: linear-gradient(180deg, var(--forest-green), var(--leaf-green));
+            color: white;
+            padding: 2rem 5%;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .back-button {
+                position: static;
+                display: inline-flex;
+                margin-bottom: 2rem;
+            }
+
+            .container {
+                padding-top: 3rem;
+            }
+
+            .timeline {
+                padding-left: 2.5rem;
+            }
+
+            .timeline::before {
+                left: 10px;
+            }
+
+            .timeline-item::before {
+                left: -3.2rem;
+                width: 24px;
+                height: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Geometric Background Elements -->
+    <div class="geo-background" aria-hidden="true">
+        <div class="geo-shape geo-circle-1"></div>
+        <div class="geo-shape geo-line-1"></div>
+    </div>
+
+    <a href="index.html" class="back-button">← Back to Home</a>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>🎓 Master's Thesis Journey</h1>
+            <p class="page-subtitle">Follow along as I research and develop my thesis on data-driven decision-making in supply chain management</p>
+        </div>
+
+        <div class="progress-overview">
+            <h3 style="font-family: 'Playfair Display', serif; color: var(--forest-green); margin-bottom: 1.5rem; font-size: 1.5rem;">Overall Progress</h3>
+            <div class="progress-bar-container">
+                <div class="progress-bar">60% Complete</div>
+            </div>
+            <p class="progress-text">Currently in the Model Development phase</p>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item completed">
+                <span class="status-badge completed">✓ Completed</span>
+                <h2>Phase 1: Research & Literature Review</h2>
+                <span class="timeline-date">📅 September 2024 - January 2025</span>
+                <p>Conducted comprehensive review of decision-making frameworks in supply chain management, analyzing over 100 academic papers and industry case studies.</p>
+                <ul>
+                    <li>Identified research gap in real-time decision support systems</li>
+                    <li>Developed theoretical framework combining statistical methods with ML</li>
+                    <li>Published preliminary findings in university journal</li>
+                </ul>
+            </div>
+
+            <div class="timeline-item completed">
+                <span class="status-badge completed">✓ Completed</span>
+                <h2>Phase 2: Data Collection & Preparation</h2>
+                <span class="timeline-date">📅 December 2024 - February 2025</span>
+                <p>Gathered and cleaned datasets from multiple industry sources, ensuring data quality and reliability for analysis.</p>
+                <ul>
+                    <li>Collected data from 5 manufacturing companies (50,000+ records)</li>
+                    <li>Developed ETL pipeline for continuous data integration</li>
+                    <li>Created comprehensive data dictionary and documentation</li>
+                </ul>
+            </div>
+
+            <div class="timeline-item in-progress">
+                <span class="status-badge in-progress">⏳ In Progress</span>
+                <h2>Phase 3: Model Development</h2>
+                <span class="timeline-date">📅 February 2026 - Present</span>
+                <p>Currently developing and testing predictive models for supply chain optimization using advanced statistical techniques and machine learning algorithms.</p>
+                <ul>
+                    <li>✅ Baseline statistical models completed (ARIMA, regression)</li>
+                    <li>🔄 Currently: Testing ensemble methods (Random Forest, XGBoost)</li>
+                    <li>📋 Next: Deep learning approaches for demand forecasting</li>
+                </ul>
+            </div>
+
+            <div class="timeline-item upcoming">
+                <span class="status-badge upcoming">📅 Upcoming</span>
+                <h2>Phase 4: Results Analysis & Validation</h2>
+                <span class="timeline-date">📅 Planned: April - May 2026</span>
+                <p>Statistical analysis of model performance, business impact assessment, and validation with industry partners.</p>
+                <ul>
+                    <li>Cross-validation and performance metrics analysis</li>
+                    <li>A/B testing with real-world scenarios</li>
+                    <li>Stakeholder interviews and feedback collection</li>
+                </ul>
+            </div>
+
+            <div class="timeline-item upcoming">
+                <span class="status-badge upcoming">📅 Upcoming</span>
+                <h2>Phase 5: Thesis Writing & Defense</h2>
+                <span class="timeline-date">📅 Planned: May - June 2026</span>
+                <p>Final documentation of research findings, preparation of defense presentation, and submission to thesis committee.</p>
+                <ul>
+                    <li>Write comprehensive thesis document (150+ pages)</li>
+                    <li>Create presentation for defense committee</li>
+                    <li>Submit to academic journal for publication</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="update-section">
+            <h2>📝 Recent Updates</h2>
+            
+            <div class="update-item">
+                <div class="update-date">February 7, 2026</div>
+                <p>Achieved 85% accuracy with the Random Forest model! This is a significant improvement over the baseline. Currently fine-tuning hyperparameters to push it even further.</p>
+            </div>
+
+            <div class="update-item">
+                <div class="update-date">January 28, 2026</div>
+                <p>Completed data preprocessing pipeline. The ETL process now runs automatically every 24 hours, ensuring we always have the latest data for model training.</p>
+            </div>
+
+            <div class="update-item">
+                <div class="update-date">January 15, 2026</div>
+                <p>Had a breakthrough meeting with my thesis advisor. We've decided to focus on interpretability alongside accuracy, which will make the model more valuable for real-world adoption.</p>
+            </div>
+
+            <div class="update-item">
+                <div class="update-date">December 20, 2024</div>
+                <p>Literature review complete! Submitted my first thesis chapter. The review identified key gaps that my research will address.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Data Analytics Portfolio 🌿</p>
+    </footer>
+</body>
+</html>

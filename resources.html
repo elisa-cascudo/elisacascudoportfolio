@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interesting Links & Articles - Data Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --forest-green: #2D5016;
+            --leaf-green: #4A7C2C;
+            --spring-green: #7FB069;
+            --sage-green: #9DC183;
+            --mint-cream: #E8F5E9;
+            --earth-brown: #8B7355;
+            --sky-blue: #B8D4E8;
+            --sunshine: #FFD54F;
+            --cream: #FFF9E6;
+            --shadow-soft: rgba(45, 80, 22, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--cream);
+            color: var(--forest-green);
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="%234A7C2C"/><circle cx="12" cy="12" r="3" fill="%23FFF9E6"/></svg>') 12 12, auto;
+            line-height: 1.7;
+        }
+
+        /* Paper texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.4;
+            z-index: 9999;
+            pointer-events: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="paper"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise"/><feDiffuseLighting in="noise" lighting-color="%23F5E6D3" surfaceScale="1"><feDistantLight azimuth="45" elevation="60"/></feDiffuseLighting></filter><rect width="300" height="300" filter="url(%23paper)"/></svg>');
+        }
+
+        .geo-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: hidden; }
+        .geo-shape { position: absolute; opacity: 0.08; }
+        @keyframes float-slow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
+
+        a, button {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="10" fill="%237FB069"/><circle cx="14" cy="14" r="4" fill="%23FFF9E6"/><circle cx="14" cy="14" r="2" fill="%234A7C2C"/></svg>') 14 14, pointer;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(180deg, var(--spring-green), var(--leaf-green));
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            border: 3px solid var(--forest-green);
+            box-shadow: 0 4px 0 var(--forest-green), 0 6px 15px var(--shadow-soft);
+            z-index: 100;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-button:hover {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 var(--forest-green), 0 4px 10px var(--shadow-soft);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 5% 4rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: var(--forest-green);
+            text-shadow: 3px 3px 0 var(--sage-green);
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: var(--leaf-green);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .category-section {
+            margin-bottom: 4rem;
+        }
+
+        .category-header {
+            display: inline-block;
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--forest-green);
+            background: linear-gradient(135deg, var(--mint-cream), white);
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            border: 4px solid var(--sage-green);
+            box-shadow: 0 5px 0 var(--sage-green), 0 8px 20px var(--shadow-soft);
+            margin-bottom: 2rem;
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .link-card {
+            background: linear-gradient(135deg, #FFFFFF 0%, #FEFDFB 100%);
+            padding: 2rem;
+            border-radius: 6px;
+            border-left: 8px solid var(--spring-green);
+            border-top: 3px solid var(--sage-green);
+            border-right: 3px solid var(--sage-green);
+            border-bottom: 3px solid var(--sage-green);
+            box-shadow: 0 6px 0 var(--sage-green), 0 10px 25px var(--shadow-soft);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .link-card::before {
+            content: '🌿';
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            font-size: 2rem;
+            background: white;
+            border-radius: 4px;
+            padding: 0.3rem;
+        }
+
+        .link-card:hover, .link-card:focus {
+            transform: translateX(15px) translateY(-5px) rotate(1deg);
+            box-shadow: 0 10px 0 var(--sage-green), 0 16px 35px var(--shadow-soft);
+            border-left-color: var(--leaf-green);
+            outline: none;
+        }
+
+        .link-card h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--forest-green);
+            margin-bottom: 0.8rem;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .external-icon {
+            color: var(--spring-green);
+            font-size: 1rem;
+        }
+
+        .link-card p {
+            color: var(--leaf-green);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .link-category-badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: linear-gradient(135deg, var(--mint-cream), var(--sage-green));
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--forest-green);
+            border: 2px solid var(--spring-green);
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            background: var(--sunshine);
+            color: var(--forest-green);
+            padding: 0.4rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            border: 2px solid var(--earth-brown);
+            box-shadow: 0 3px 8px rgba(255, 213, 79, 0.5);
+            transform: rotate(-5deg);
+        }
+
+        footer {
+            background: linear-gradient(180deg, var(--forest-green), var(--leaf-green));
+            color: white;
+            padding: 2rem 5%;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .back-button {
+                position: static;
+                display: inline-flex;
+                margin-bottom: 2rem;
+            }
+
+            .container {
+                padding-top: 3rem;
+            }
+
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Geometric Background Elements -->
+    <div class="geo-background" aria-hidden="true">
+        <div class="geo-shape geo-circle-1"></div>
+        <div class="geo-shape geo-line-1"></div>
+    </div>
+
+    <a href="index.html" class="back-button">← Back to Home</a>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>🔗 Interesting Links & Articles</h1>
+            <p class="page-subtitle">A curated collection of resources that inspire my work and might help you on your data journey too!</p>
+        </div>
+
+        <div class="category-section">
+            <h2 class="category-header">📊 Data Visualization</h2>
+            <div class="links-grid">
+                <a href="https://www.storytellingwithdata.com/" class="link-card" target="_blank" rel="noopener noreferrer">
+                    <span class="featured-badge">⭐ Must Read!</span>
+                    <h3>Storytelling with Data <span class="external-icon">↗</span></h3>
+                    <p>Cole Nussbaumer Knaflic's essential resource for creating compelling data visualizations that communicate insights effectively. Amazing blog posts and book recommendations!</p>
+                    <span class="link-category-badge">Visualization</span>
+                </a>
+
+                <a href="https://flowingdata.com/" class="link-card" target="_blank" rel="noopener noreferrer">
+                    <h3>FlowingData <span class="external-icon">↗</span></h3>
+                    <p>Nathan Yau's incredible site exploring how statisticians, designers, and computer scientists use data visualization to understand the world. Tutorials and inspiration in one place!</p>
+                    <span class="link-category-badge">Visualization</span>
+                </a>
+
+                <a href="https://www.visualcinnamon.com/" class="link-card" target="_blank" rel="noopener noreferrer">
+                    <h3>Visual Cinnamon <span class="external-icon">↗</span></h3>
+                    <p>Nadieh Bremer's stunning data visualization work and tutorials. Perfect for learning advanced D3.js techniques and creative approaches to complex datasets.</p>
+                    <span class="link-category-badge">Visualization</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="category-section">
+            <h2 class="category-header">📚 Learning Platforms</h2>
+            <div class="links-grid">
+                <a href="https://www.kaggle.com/" class="link-card" target="_blank" rel="noopener noreferrer">
+                    <span class="featured-badge">⭐ Practice Here!</span>
+                    <h3>Kaggle <span class="external-icon">↗</span></h3>
+                    <p>The world's largest data science community with competitions, datasets, and notebooks. Perfect for hands-on practice and learning from others' approaches.</p>
+                    <span class="link-category-badge">Practice</span>
+                </a>
+
+                <a href="https://www.datacamp.com/blog" class="link-card" target="_blank" rel="noopener noreferrer">
+                    <h3>DataCamp Blog <span class="external-icon">↗</span></h3>
+                    <p>Comprehensive tutorials and insights on data science, analytics, and visualization techniques. Great for staying updated with industry trends.</p>
+                    <span class="link-category-badge">Tutorials</span>
+                </a>
+
+                <a href="https://mode.com/sql-tutorial/" class="link-card" target="_blank" rel="noopener noreferrer">
+                    <h3>Mode SQL Tutorial <span class="external-icon">↗</span></h3>
+                    <p>One of the best free SQL tutorials available. Interactive lessons that take you from beginner to advanced query writing.</p>
+                    <span class="link-category-badge">SQL</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="category-section">
+            <h2 class="category-header">📖 Blogs & Articles</h2>
+            <div class="links-grid">
+                <a href="https://towardsdatascience.com/" class="link-card" target="_blank" rel="noopener noreferrer">
+                    <span class="featured-badge">⭐ Daily Read!</span>
+                    <h3>Towards Data Science <span class="external-icon">↗</span></h3>
+                    <p>Medium's premier publication for data science articles. Covers machine learning, statistics, and practical data analysis with real-world applications.</p>
+                    <span class="link-category-badge">Articles</span>
+                </a>
+
+                <a href="https://www.r-bloggers.com/" class="link-card" target="_blank" rel="noopener noreferrer">
+                    <h3>R-Bloggers <span class="external-icon">↗</span></h3>
+                    <p>Community-driven blog aggregator for R programming. Thousands of tutorials, case studies, and new package announcements from R enthusiasts worldwide.</p>
+                    <span class="link-category-badge">R Programming</span>
+                </a>
+
+                <a href="https://www.kdnuggets.com/" class="link-card" target="_blank" rel="noopener noreferrer">
+                    <h3>KDnuggets <span class="external-icon">↗</span></h3>
+                    <p>Leading site on AI, Analytics, Big Data, and Data Science. News, tutorials, and career advice all in one place.</p>
+                    <span class="link-category-badge">News</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="category-section">
+            <h2 class="category-header">🎯 Statistics & Methods</h2>
+            <div class="links-grid">
+                <a href="https://statisticsbyjim.com/" class="link-card" target="_blank" rel="noopener noreferrer">
+                    <span class="featured-badge">⭐ Clear Explanations!</span>
+                    <h3>Statistics By Jim <span class="external-icon">↗</span></h3>
+                    <p>Jim Frost's excellent explanations of statistical concepts and when to use different analysis methods. Makes complex stats accessible!</p>
+                    <span class="link-category-badge">Statistics</span>
+                </a>
+
+                <a href="https://www.statology.org/" class="link-card" target="_blank" rel="noopener noreferrer">
+                    <h3>Statology <span class="external-icon">↗</span></h3>
+                    <p>Step-by-step tutorials for statistics in Excel, R, Python, and SPSS. Perfect reference when you need to implement specific statistical tests.</p>
+                    <span class="link-category-badge">Statistics</span>
+                </a>
+
+                <a href="https://seeing-theory.brown.edu/" class="link-card" target="_blank" rel="noopener noreferrer">
+                    <h3>Seeing Theory <span class="external-icon">↗</span></h3>
+                    <p>Visual introduction to probability and statistics from Brown University. Interactive visualizations make learning probability intuitive and fun!</p>
+                    <span class="link-category-badge">Probability</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="category-section">
+            <h2 class="category-header">🛠️ Tools & Resources</h2>
+            <div class="links-grid">
+                <a href="https://github.com/awesome-machine-learning/awesome-machine-learning" class="link-card" target="_blank" rel="noopener noreferrer">
+                    <h3>Awesome Machine Learning <span class="external-icon">↗</span></h3>
+                    <p>Curated list of awesome machine learning frameworks, libraries, and software. A treasure trove of tools organized by language and task.</p>
+                    <span class="link-category-badge">Resources</span>
+                </a>
+
+                <a href="https://www.tableau.com/learn/training" class="link-card" target="_blank" rel="noopener noreferrer">
+                    <h3>Tableau Training <span class="external-icon">↗</span></h3>
+                    <p>Free Tableau training videos and resources from the official source. Essential for mastering business intelligence and interactive dashboards.</p>
+                    <span class="link-category-badge">BI Tools</span>
+                </a>
+
+                <a href="https://www.python-graph-gallery.com/" class="link-card" target="_blank" rel="noopener noreferrer">
+                    <h3>Python Graph Gallery <span class="external-icon">↗</span></h3>
+                    <p>Hundreds of Python visualization examples with code. Copy-paste friendly and covers matplotlib, seaborn, plotly, and more!</p>
+                    <span class="link-category-badge">Python</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="category-section">
+            <h2 class="category-header">🎓 Academic & Research</h2>
+            <div class="links-grid">
+                <a href="https://www.nature.com/subjects/data-science" class="link-card" target="_blank" rel="noopener noreferrer">
+                    <h3>Nature: Data Science <span class="external-icon">↗</span></h3>
+                    <p>Peer-reviewed research articles on data science from one of the world's leading scientific journals. Cutting-edge academic research.</p>
+                    <span class="link-category-badge">Research</span>
+                </a>
+
+                <a href="https://arxiv.org/list/stat.ML/recent" class="link-card" target="_blank" rel="noopener noreferrer">
+                    <h3>arXiv: Machine Learning <span class="external-icon">↗</span></h3>
+                    <p>Preprint repository for machine learning papers. Get the latest research before it's published in journals!</p>
+                    <span class="link-category-badge">Research</span>
+                </a>
+
+                <a href="https://distill.pub/" class="link-card" target="_blank" rel="noopener noreferrer">
+                    <span class="featured-badge">⭐ Beautiful!</span>
+                    <h3>Distill <span class="external-icon">↗</span></h3>
+                    <p>Machine learning research presented with clarity and interactivity. Some of the most beautiful and understandable ML explanations online.</p>
+                    <span class="link-category-badge">Research</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Data Analytics Portfolio 🌿</p>
+        <p>Happy learning and exploring! 📚</p>
+    </footer>
+</body>
+</html>

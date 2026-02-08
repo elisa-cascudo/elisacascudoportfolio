@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Featured Projects - Data Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --forest-green: #2D5016;
+            --leaf-green: #4A7C2C;
+            --spring-green: #7FB069;
+            --sage-green: #9DC183;
+            --mint-cream: #E8F5E9;
+            --earth-brown: #8B7355;
+            --sky-blue: #B8D4E8;
+            --sunshine: #FFD54F;
+            --cream: #FFF9E6;
+            --shadow-soft: rgba(45, 80, 22, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #FFF9E6 0%, #F5EDDA 50%, #FFF9E6 100%);
+            background-attachment: fixed;
+            color: var(--forest-green);
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="%234A7C2C"/><circle cx="12" cy="12" r="3" fill="%23FFF9E6"/></svg>') 12 12, auto;
+            line-height: 1.7;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Paper texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.4;
+            z-index: 9999;
+            pointer-events: none;
+            background-image: 
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="paper"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise"/><feDiffuseLighting in="noise" lighting-color="%23F5E6D3" surfaceScale="1"><feDistantLight azimuth="45" elevation="60"/></feDiffuseLighting></filter><rect width="300" height="300" filter="url(%23paper)"/></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /></filter><rect width="100%" height="100%" filter="url(%23grain)" opacity="0.15"/></svg>');
+            background-blend-mode: multiply;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            z-index: 9998;
+            pointer-events: none;
+            background-image: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(139, 115, 85, 0.03) 2px,
+                rgba(139, 115, 85, 0.03) 3px
+            );
+        }
+
+        a, button {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="10" fill="%237FB069"/><circle cx="14" cy="14" r="4" fill="%23FFF9E6"/><circle cx="14" cy="14" r="2" fill="%234A7C2C"/></svg>') 14 14, pointer;
+        }
+
+        /* Geometric background elements */
+        .geo-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .geo-shape {
+            position: absolute;
+            opacity: 0.08;
+        }
+
+        .geo-circle-1 {
+            top: 10%;
+            right: 15%;
+            width: 200px;
+            height: 200px;
+            border: 3px solid var(--spring-green);
+            border-radius: 50%;
+            animation: float-slow 20s ease-in-out infinite;
+        }
+
+        .geo-square-1 {
+            top: 25%;
+            left: 8%;
+            width: 120px;
+            height: 120px;
+            border: 3px solid var(--leaf-green);
+            transform: rotate(15deg);
+            animation: rotate-slow 30s linear infinite;
+        }
+
+        .geo-line-1 {
+            top: 30%;
+            left: 5%;
+            width: 200px;
+            height: 3px;
+            background: var(--spring-green);
+            transform: rotate(-30deg);
+            animation: float-slow 15s ease-in-out infinite;
+        }
+
+        @keyframes float-slow {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-30px) translateX(20px); }
+        }
+
+        @keyframes rotate-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(180deg, var(--spring-green), var(--leaf-green));
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            border: 3px solid var(--forest-green);
+            box-shadow: 0 4px 0 var(--forest-green), 0 6px 15px var(--shadow-soft);
+            z-index: 100;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-button:hover {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 var(--forest-green), 0 4px 10px var(--shadow-soft);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 5% 4rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: var(--forest-green);
+            text-shadow: 3px 3px 0 var(--sage-green);
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: var(--leaf-green);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .project-card {
+            background: linear-gradient(135deg, #FFFFFF 0%, #FEFDFB 100%);
+            border-radius: 6px;
+            overflow: hidden;
+            border: 4px solid var(--sage-green);
+            box-shadow: 0 8px 0 var(--sage-green), 0 12px 30px var(--shadow-soft);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .project-card:hover, .project-card:focus {
+            transform: translateY(-10px) rotate(-2deg) scale(1.02);
+            box-shadow: 0 12px 0 var(--sage-green), 0 18px 40px var(--shadow-soft);
+            outline: none;
+        }
+
+        .project-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, var(--spring-green), var(--sage-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .project-card:hover .project-image::after {
+            left: 100%;
+        }
+
+        .project-content {
+            padding: 2rem;
+        }
+
+        .project-number {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: var(--sunshine);
+            color: var(--forest-green);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            border-radius: 3px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            border: 2px solid var(--forest-green);
+        }
+
+        .project-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            color: var(--forest-green);
+        }
+
+        .project-content p {
+            color: var(--leaf-green);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            padding: 0.4rem 1rem;
+            background: var(--mint-cream);
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: var(--spring-green);
+            font-weight: 600;
+            border: 2px solid var(--sage-green);
+        }
+
+        .view-details {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--spring-green);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            transition: gap 0.3s ease;
+        }
+
+        .project-card:hover .view-details {
+            gap: 1rem;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: linear-gradient(135deg, #FFFFFF 0%, #FEFDFB 100%);
+            padding: 2.5rem;
+            border-radius: 6px;
+            border: 3px solid var(--leaf-green);
+            box-shadow: 0 6px 0 var(--sage-green), 0 10px 25px var(--shadow-soft);
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .filter-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--forest-green);
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .clear-filters {
+            padding: 0.6rem 1.2rem;
+            background: white;
+            border: 2px solid var(--sage-green);
+            border-radius: 4px;
+            color: var(--forest-green);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 0 var(--sage-green);
+        }
+
+        .clear-filters:hover {
+            background: var(--mint-cream);
+            transform: translateY(1px);
+            box-shadow: 0 1px 0 var(--sage-green);
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            min-height: 40px;
+        }
+
+        .filter-tag {
+            padding: 0.6rem 1.2rem;
+            background: white;
+            border: 2px solid var(--sage-green);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: var(--forest-green);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 2px 0 var(--sage-green);
+            position: relative;
+        }
+
+        .filter-tag:hover {
+            background: var(--mint-cream);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 0 var(--sage-green);
+        }
+
+        .filter-tag.active {
+            background: linear-gradient(135deg, var(--spring-green), var(--sage-green));
+            color: white;
+            border-color: var(--forest-green);
+            box-shadow: 0 3px 0 var(--forest-green);
+        }
+
+        .filter-tag.active:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 0 var(--forest-green);
+        }
+
+        .filter-status {
+            text-align: center;
+            color: var(--leaf-green);
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.8rem;
+            background: var(--mint-cream);
+            border-radius: 4px;
+            border: 2px solid var(--sage-green);
+        }
+
+        .filter-status span {
+            color: var(--forest-green);
+            font-weight: 700;
+        }
+
+        .project-card.hidden {
+            display: none;
+        }
+
+        footer {
+            background: linear-gradient(180deg, var(--forest-green), var(--leaf-green));
+            color: white;
+            padding: 2rem 5%;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .back-button {
+                position: static;
+                display: inline-flex;
+                margin-bottom: 2rem;
+            }
+
+            .container {
+                padding-top: 3rem;
+            }
+
+            .filter-section {
+                padding: 1.5rem;
+            }
+
+            .filter-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .filter-header h3 {
+                font-size: 1.3rem;
+            }
+
+            .clear-filters {
+                width: 100%;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Geometric Background Elements -->
+    <div class="geo-background" aria-hidden="true">
+        <div class="geo-shape geo-circle-1"></div>
+        <div class="geo-shape geo-square-1"></div>
+        <div class="geo-shape geo-line-1"></div>
+    </div>
+
+    <a href="index.html" class="back-button">← Back to Home</a>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>📊 Featured Projects</h1>
+            <p class="page-subtitle">Explore my data analytics journey through real-world projects</p>
+        </div>
+
+        <!-- Tag Filter Section -->
+        <div class="filter-section">
+            <div class="filter-header">
+                <h3>🏷️ Filter by Tags</h3>
+                <button class="clear-filters" id="clearFilters">Clear All</button>
+            </div>
+            <div class="tags-container" id="tagsContainer">
+                <!-- Tags will be dynamically generated here -->
+            </div>
+            <div class="filter-status" id="filterStatus">
+                Showing <span id="visibleCount">0</span> of <span id="totalCount">0</span> projects
+            </div>
+        </div>
+
+        <div class="projects-grid" id="projectsGrid">
+            <a href="project1.html" class="project-card" data-tags="Python,K-Means Clustering,Tableau">
+                <div class="project-image" role="img" aria-label="Customer Segmentation Analysis">📊</div>
+                <div class="project-content">
+                    <span class="project-number">Project #1</span>
+                    <h2>Customer Segmentation Analysis</h2>
+                    <p>Developed a machine learning model to segment customers based on purchasing behavior, resulting in a 25% increase in targeted marketing efficiency.</p>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">K-Means Clustering</span>
+                        <span class="tag">Tableau</span>
+                    </div>
+                    <span class="view-details">View Full Case Study →</span>
+                </div>
+            </a>
+
+            <a href="project2.html" class="project-card" data-tags="R,ARIMA,Shiny">
+                <div class="project-image" role="img" aria-label="Sales Forecasting Dashboard">📈</div>
+                <div class="project-content">
+                    <span class="project-number">Project #2</span>
+                    <h2>Sales Forecasting Dashboard</h2>
+                    <p>Built an interactive dashboard for real-time sales forecasting using time series analysis, improving inventory management by 30%.</p>
+                    <div class="project-tags">
+                        <span class="tag">R</span>
+                        <span class="tag">ARIMA</span>
+                        <span class="tag">Shiny</span>
+                    </div>
+                    <span class="view-details">View Full Case Study →</span>
+                </div>
+            </a>
+
+            <a href="project3.html" class="project-card" data-tags="Python,Flask,MCDA">
+                <div class="project-image" role="img" aria-label="Decision Support System">🎯</div>
+                <div class="project-content">
+                    <span class="project-number">Project #3</span>
+                    <h2>Decision Support System</h2>
+                    <p>Created a web-based decision support tool that evaluates supplier performance using multi-criteria decision analysis.</p>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Flask</span>
+                        <span class="tag">MCDA</span>
+                    </div>
+                    <span class="view-details">View Full Case Study →</span>
+                </div>
+            </a>
+
+            <a href="project4.html" class="project-card" data-tags="Python,Random Forest,SQL">
+                <div class="project-image" role="img" aria-label="Predictive Maintenance Model">🔧</div>
+                <div class="project-content">
+                    <span class="project-number">Project #4</span>
+                    <h2>Predictive Maintenance Model</h2>
+                    <p>Implemented predictive analytics to forecast equipment failures, reducing downtime by 40% and maintenance costs by 20%.</p>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Random Forest</span>
+                        <span class="tag">SQL</span>
+                    </div>
+                    <span class="view-details">View Full Case Study →</span>
+                </div>
+            </a>
+
+            <a href="project5.html" class="project-card" data-tags="R,Apriori Algorithm,Power BI">
+                <div class="project-image" role="img" aria-label="Market Basket Analysis">🛒</div>
+                <div class="project-content">
+                    <span class="project-number">Project #5</span>
+                    <h2>Market Basket Analysis</h2>
+                    <p>Analyzed shopping patterns to uncover product associations, leading to optimized product placement and a 15% boost in cross-selling.</p>
+                    <div class="project-tags">
+                        <span class="tag">R</span>
+                        <span class="tag">Apriori Algorithm</span>
+                        <span class="tag">Power BI</span>
+                    </div>
+                    <span class="view-details">View Full Case Study →</span>
+                </div>
+            </a>
+
+            <a href="project6.html" class="project-card" data-tags="Python,NLP,Docker">
+                <div class="project-image" role="img" aria-label="Sentiment Analysis Dashboard">💬</div>
+                <div class="project-content">
+                    <span class="project-number">Project #6</span>
+                    <h2>Sentiment Analysis Dashboard</h2>
+                    <p>Built a real-time sentiment analysis tool for social media monitoring, enabling rapid response to customer feedback and brand mentions.</p>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">NLP</span>
+                        <span class="tag">Docker</span>
+                    </div>
+                    <span class="view-details">View Full Case Study →</span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Data Analytics Portfolio 🌿</p>
+    </footer>
+
+    <script>
+        // Tag Filtering System
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectCards = document.querySelectorAll('.project-card');
+            const tagsContainer = document.getElementById('tagsContainer');
+            const clearFiltersBtn = document.getElementById('clearFilters');
+            const visibleCountSpan = document.getElementById('visibleCount');
+            const totalCountSpan = document.getElementById('totalCount');
+            
+            let activeTags = new Set();
+            const allTags = new Set();
+
+            // Extract all unique tags from projects
+            projectCards.forEach(card => {
+                const tags = card.getAttribute('data-tags');
+                if (tags) {
+                    tags.split(',').forEach(tag => {
+                        allTags.add(tag.trim());
+                    });
+                }
+            });
+
+            // Sort tags alphabetically
+            const sortedTags = Array.from(allTags).sort((a, b) => 
+                a.toLowerCase().localeCompare(b.toLowerCase())
+            );
+
+            // Create filter tag buttons
+            sortedTags.forEach(tag => {
+                const tagButton = document.createElement('button');
+                tagButton.className = 'filter-tag';
+                tagButton.textContent = tag;
+                tagButton.setAttribute('data-tag', tag);
+                tagButton.setAttribute('aria-pressed', 'false');
+                
+                tagButton.addEventListener('click', function() {
+                    toggleTag(tag, tagButton);
+                });
+
+                tagsContainer.appendChild(tagButton);
+            });
+
+            // Toggle tag active state
+            function toggleTag(tag, button) {
+                if (activeTags.has(tag)) {
+                    activeTags.delete(tag);
+                    button.classList.remove('active');
+                    button.setAttribute('aria-pressed', 'false');
+                } else {
+                    activeTags.add(tag);
+                    button.classList.add('active');
+                    button.setAttribute('aria-pressed', 'true');
+                }
+                filterProjects();
+            }
+
+            // Filter projects based on active tags
+            function filterProjects() {
+                let visibleCount = 0;
+
+                projectCards.forEach(card => {
+                    const cardTags = card.getAttribute('data-tags').split(',').map(t => t.trim());
+                    
+                    // If no tags are active, show all projects
+                    if (activeTags.size === 0) {
+                        card.classList.remove('hidden');
+                        visibleCount++;
+                    } else {
+                        // Show project if it has ALL active tags
+                        const hasAllTags = Array.from(activeTags).every(tag => 
+                            cardTags.includes(tag)
+                        );
+                        
+                        if (hasAllTags) {
+                            card.classList.remove('hidden');
+                            visibleCount++;
+                        } else {
+                            card.classList.add('hidden');
+                        }
+                    }
+                });
+
+                updateCounts(visibleCount);
+            }
+
+            // Clear all filters
+            clearFiltersBtn.addEventListener('click', function() {
+                activeTags.clear();
+                document.querySelectorAll('.filter-tag').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-pressed', 'false');
+                });
+                filterProjects();
+            });
+
+            // Update visible/total counts
+            function updateCounts(visible) {
+                visibleCountSpan.textContent = visible;
+                totalCountSpan.textContent = projectCards.length;
+            }
+
+            // Initialize counts
+            updateCounts(projectCards.length);
+
+            // Keyboard navigation for filter tags
+            document.querySelectorAll('.filter-tag').forEach(tag => {
+                tag.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        tag.click();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
